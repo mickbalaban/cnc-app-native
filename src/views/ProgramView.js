@@ -41,7 +41,7 @@ function(
         }, this)
 
         machine.data.on('change:line', function(c) {
-          var _p = Math.round(c.attributes.line / (that.programLength / 100)) + "%";
+          var _p = Math.round(c.attributes.line / (app.programLength / 100)) + "%";
           $('.program-progress .progress-bar').css('width', _p).html(_p)
         });
       },
@@ -124,9 +124,27 @@ function(
 
       processCode: function(code)
       {
-
         this.program = code.trim();
+
+        // Split collected data by line endings
+        var lines = this.program.split(/(?:\r\n|\r|\n)+/);
+        lines = lines.filter(function(line) {
+          return !line.match(/^\s*$/);
+        });
+        var cnt = 0;
+        lines = lines.map(function (line) {
+          lineMatch = line.match(/^(?:[nN][0-9]+\s*)?(.*)$/);
+          if (lineMatch) {
+            cnt++;
+          }
+          return line;
+        })
+
+        app.programLength = cnt;
+
         $('.program-code-block textarea').val(code);
+        // count the lines
+
         //console.info(code);
       },
 
@@ -139,9 +157,6 @@ function(
 
       programStart: function(e)
       {
-
-
-
         this.running = true;
         //$('.program-progress .progress-bar').css('width', 0).html('0%')
         // flush the machine buffer

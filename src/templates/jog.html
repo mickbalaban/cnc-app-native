@@ -46,7 +46,7 @@
       <div class="dro-axis x">
           <label>X</label>
           <button class="btn jog-xyz" ctrl="x-"><i class="fa fa-minus"></i></button>
-          <input type="text" ctrl="x" value="0.00"/>
+          <input type="text" ctrl="x" value="<%- machine.data.get('posx') %>"/>
           <button class="btn jog-xyz"  ctrl="x+"><i class="fa fa-plus"></i></button>
           <button class="btn z"><i class="fa fa-dot-circle-o"></i></button>
           <button class="btn h"><i class="fa fa-home"></i></button>
@@ -54,7 +54,7 @@
       <div class="dro-axis y">
           <label>Y</label>
           <button class="btn jog-xyz" ctrl="y-"><i class="fa fa-minus"></i></button>
-          <input type="text"  ctrl="y" value="0.00"/>
+          <input type="text"  ctrl="y" value="<%- machine.data.get('posy') %>"/>
           <button class="btn jog-xyz"  ctrl="y+"><i class="fa fa-plus"></i></button>
           <button class="btn z"><i class="fa fa-dot-circle-o"></i></button>
           <button class="btn h"><i class="fa fa-home"></i></button>
@@ -62,7 +62,7 @@
       <div class="dro-axis z">
           <label>Z</label>
           <button class="btn jog-xyz" ctrl="z-"><i class="fa fa-minus"></i></button>
-          <input type="text"  ctrl="z" value="0.00"/>
+          <input type="text"  ctrl="z" value="<%- machine.data.get('posz') %>"/>
           <button class="btn jog-xyz"  ctrl="z+"><i class="fa fa-plus"></i></button>
           <button class="btn z"><i class="fa fa-dot-circle-o"></i></button>
           <button class="btn h"><i class="fa fa-home"></i></button>

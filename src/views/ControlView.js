@@ -34,7 +34,9 @@ function(
 
     stopAndFlush: function(e)
     {
-      machine.command('!\n%~');
+      machine.command('!%');
+      machine.command('{clear:n}');
+      machine.command('~');
     },
 
 

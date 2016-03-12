@@ -24,10 +24,6 @@ function(
 
     function Machine()
     {
-        this.ctrlPort = null;
-        this.dataPort = null;
-        this.ctrlConnection = false;
-        this.dataConnection = false;
         this.running = false;
         this.serialPortSpeed = 115200;
         this.serialQueue = [];
@@ -83,36 +79,6 @@ function(
         that.command('{"sr":""}');
     }
 
-    Machine.prototype.processResponse = function(r)
-    {
-      //var res =  ab2str(r.data).trim().split("\n");
-      var str =  ab2str(r.data);
-      var lb = str.indexOf('\n');
-      // if there is a line break, try to interpret the response as json
-
-      if (lb !== -1) {
-        that.responseBuffer += str.substring(0, lb);
-        var strr =  str.substring(lb);
-        //console.info(that.responseBuffer);
-        try {
-            var _r = JSON.parse(that.responseBuffer);
-        } catch (err) {
-            // not valid json
-            //console.info(that.responseBuffer);
-            //console.info(err);
-            channel.trigger("machine.response", {}, that.responseBuffer);
-            that.responseBuffer = strr;
-            return;
-        }
-        channel.trigger('machine.response', _r, that.responseBuffer);
-        //console.info(that.responseBuffer);
-        that.responseBuffer = strr;
-      } else {
-        that.responseBuffer += str;
-      }
-      that.sendNextLine();
-    }
-
     Machine.prototype.zeroMachine = function(axis)
     {
         that.command('{"gc": "G28.3 _AXIS_0"}'.replace('_AXIS_', axis));
@@ -139,22 +105,7 @@ function(
         that.command('{"sr":""}')
     }
 
-    window.ab2str = function(buf)
-    {
-        var bufView = new Uint8Array(buf);
-        var encodedString = String.fromCharCode.apply(null, bufView);
-        return decodeURIComponent(escape(encodedString));
-    }
 
-    window.str2ab = function(str)
-    {
-        var encodedString = unescape(encodeURIComponent(str));
-        var bytes = new Uint8Array(encodedString.length);
-        for (var i = 0; i < encodedString.length; ++i) {
-            bytes[i] = encodedString.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
 
     return new Machine();
 

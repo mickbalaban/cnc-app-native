@@ -42,12 +42,14 @@ function(
 	}
 
 	var app = {};
+	app.commandHistory = [];
+	app.programLength = 0;
 
 	window.g = new TinyG();
 
 	g.on('sentRaw', function(data, channel) {
-		console.log('raw');
 		console.info(data);
+		app.channel.trigger('machine.response', data)
   });
 
 	g.on('open', function() {
@@ -82,8 +84,8 @@ function(
 	});
 
 	g.on('data', function(data) {
-		console.log('data');
 		console.info(data);
+		app.channel.trigger('machine.response', data)
 	});
 
 	g.on('close', function() {
@@ -93,7 +95,6 @@ function(
 	g.on('statusChanged', function(st) {
 		machine.updateFromReport(st);
 	});
-
 
 	process.on('uncaughtException', function (error) {
   // Handle the error

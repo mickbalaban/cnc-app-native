@@ -20,12 +20,26 @@ function(
         routes:
         {
             '/': 'showConnect',
+            'dashboard': 'showDashboard',
+            'console': 'showConsole',
             '*actions':'showConnect'
         },
 
         showConnect: function(e)
         {
             app.selectedView = 'connection';
+            this.topView.render();
+        },
+
+        showDashboard: function(e)
+        {
+            app.selectedView = 'dashboard';
+            this.topView.render();
+        },
+
+        showConsole: function(e)
+        {
+            app.selectedView = 'console';
             this.topView.render();
         },
 

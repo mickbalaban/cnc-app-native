@@ -4,14 +4,16 @@ define([
   'app',
   'views/NavView',
   'views/ConnectionView',
-  'views/DashboardView'
+  'views/DashboardView',
+  'views/ConsoleView'
 ],
 
 function(
   app,
   NavView,
   ConnectionView,
-  DashboardView
+  DashboardView,
+  ConsoleView
 )
 {
 
@@ -25,13 +27,11 @@ function(
         {
           var that = this;
           app.channel.bind('connection.success', function(e) {
-            //  chrome.app.window.current().innerBounds.setSize(380,417);
               app.selectedView = 'dashboard';
               that.render();
           });
 
           app.channel.bind('connection.closed', function(e) {
-            //  chrome.app.window.current().innerBounds.setSize(380,417);
               app.selectedView = 'connection';
               that.render();
           })
@@ -59,6 +59,11 @@ function(
 
             if (app.selectedView == 'dashboard') {
                 var v = this.loadView(new DashboardView(), 'dashboard');
+                this.$el.html(v.render());
+            }
+
+            if (app.selectedView == 'console') {
+                var v = this.loadView(new ConsoleView(), 'console');
                 this.$el.html(v.render());
             }
 
