@@ -33,7 +33,7 @@ function(
     {
       this.connectionError = false;
       this.render();
-      setTimeout(function() {g.openFirst()}, 500);
+      g.openFirst();
 
     },
 

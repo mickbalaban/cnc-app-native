@@ -108,7 +108,7 @@ function(
     offJog: function(e)
     {
       if (machine.get('jog_mode') == 'con')
-          machine.pauseAndFlush();
+          machine.command('!\n%\n~');
     },
 
     onDroInput: function(e)

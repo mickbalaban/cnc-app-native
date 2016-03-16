@@ -19,7 +19,7 @@ function(
     events: {
       'click button.motors-off': 'motorsOff',
       'click button.clear-alarm': 'clearAlarm',
-      'click button.stop-and-flush': 'stopAndFlush'
+      'click button.stop-and-flush': machine.pauseAndFlush
     },
 
     motorsOff: function(e)
@@ -32,14 +32,7 @@ function(
       machine.command('{"clear":n}');
     },
 
-    stopAndFlush: function(e)
-    {
-      machine.command('!%');
-      machine.command('{clear:n}');
-      machine.command('~');
-    },
-
-
+  
     render: function()
     {
       this.$el.html(this.tpl({app:app}));

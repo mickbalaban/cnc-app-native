@@ -87,7 +87,14 @@ function(
 
     Machine.prototype.pauseAndFlush = function()
     {
-      that.command("!\n%\~");
+      g.flush();
+    }
+
+    Machine.prototype.moveBy = function(axis, distance)
+    {
+      that.command('{gc: "G91"}');
+      that.command('{gc: "G0 '+axis+distance+'"}');
+      that.command('{gc: "G90"}');
     }
 
     Machine.prototype.updateFromReport = function(sr)

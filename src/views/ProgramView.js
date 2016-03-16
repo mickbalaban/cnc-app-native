@@ -36,8 +36,10 @@ function(
           }
         })
 
-        this.listenTo(window.channel, 'stop-and-flush', function(e) {
-          this.onProgramCompleted();
+        this.listenTo(app.channel, 'stop-and-flush', function(e) {
+          //machine.pauseAndFlush();
+          //this.onProgramCompleted();
+          this.render();
         }, this)
 
         machine.data.on('change:line', function(c) {
@@ -50,64 +52,19 @@ function(
         'click button.program-start': 'programStart',
         'click button.program-stop': 'programStop',
         'click button.program-load': 'programLoad',
-        'click button.program-edit': 'showProgramEdit',
-        'click button.program-edit-cancel': 'cancelProgramEdit',
-        'click button.program-edit-save': 'saveProgramEdit',
         'click button.program-clear': 'clearProgram',
         'click button.program-pause': 'pauseProgram',
         'change input.file-upload': 'uploadFile'
-        //'change textarea': 'updateProgramFromText'
       },
 
-
-      showProgramName: function(name)
-      {
-          $('.program-view').addClass("loaded");
-          $('.program-view .panel-title').html(name);
-          $('.program-view .run-actions').show();
-          app.channel.trigger('screen.autoresize', true);
-      },
-
-      showProgramEdit: function()
-      {
-        $('.program-actions .run-actions').hide();
-        $('.program-actions .edit-actions').show();
-        $('.program-code-block textarea').removeAttr('disabled');
-        app.channel.trigger('screen.autoresize', true);
-      },
-
-      cancelProgramEdit: function()
-      {
-        $('.program-actions .run-actions').show();
-        $('.program-actions .edit-actions').hide();
-        $('.program-code-block textarea').attr('disabled', true);
-        $('.program-code-block textarea').val(this.program);
-        app.channel.trigger('screen.autoresize', true);
-      },
 
       clearProgram: function()
       {
         this.program = '';
-        $('.program-actions .run-actions').hide();
-        $('.program-actions .edit-actions').hide();
-        $('.program-view .panel-title').html('No program loaded');
-        this.clearProgramName();
-        app.channel.trigger('screen.autoresize', true);
-      },
-
-      saveProgramEdit: function()
-      {
-        this.program = $('.program-code-block textarea').val().trim();
-        $('.program-actions .run-actions').show();
-        $('.program-actions .edit-actions').hide();
-        $('.program-code-block textarea').attr('disabled', true);
-        app.channel.trigger('screen.autoresize', true);
-      },
-
-      clearProgramName: function()
-      {
-        $('.program-view').removeClass("loaded");
-        $('.program-view .alert').show();
+        app.programName = null;
+        app.gcode = null;
+        app.gcodeFile = null;
+        this.render();
         app.channel.trigger('screen.autoresize', true);
       },
 
@@ -142,16 +99,13 @@ function(
 
         app.programLength = cnt;
 
-        $('.program-code-block textarea').val(code);
-        // count the lines
-
-        //console.info(code);
+        app.gcode = (code);
       },
 
       onProgramCompleted: function()
       {
         this.running = false;
-        $('.program-view').removeClass('running');
+        this.render();
         app.channel.trigger('screen.autoresize', true);
       },
 
@@ -161,19 +115,11 @@ function(
         //$('.program-progress .progress-bar').css('width', 0).html('0%')
         // flush the machine buffer
         g.write('%');
-
         $('.program-view').addClass('running');
         app.channel.trigger('screen.autoresize', true);
-
-        //var _q = this.program.split("\n");
-        //this.programLength = _q.length;
-
-        //_.each(_q, function(l,k) {
-        //  _q[k] = "N"+k+l;
-        //})
-        //machine.serialQueue = _q;
-        //machine.sendNextLine();
-        g.sendFile(app.gcodeFile.path);
+        g.sendFile(app.gcodeFile.path, function() {
+          app.channel.trigger('file.sent')
+        });
       },
 
       uploadFile: function(e)
@@ -186,7 +132,9 @@ function(
 
         reader.onload = function(e) {
           that.processCode(e.target.result);
-          that.showProgramName(name);
+          app.programName = name;
+          that.render();
+          app.channel.trigger('screen.autoresize', true);
         };
         reader.readAsText(file);
       },
@@ -194,26 +142,6 @@ function(
       programLoad: function(e)
       {
         $('input.file-upload').trigger('click');
-        /*
-          chrome.fileSystem.chooseEntry(function (entry) {
-
-            if (chrome.runtime.lastError) {
-              console.info(chrome.runtime.lastError.message);
-              return;
-            }
-
-            entry.file(function(file) {
-              var reader = new FileReader();
-              reader.onload = function(e) {
-                programView.processCode(e.target.result);
-                programView.showProgramName(entry.name);
-              };
-              reader.readAsText(file);
-              //replaceDocContentsFromFileEntry();
-
-            });
-          });
-          */
       },
 
 

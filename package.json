@@ -4,14 +4,16 @@
   "description": "printrbot cnc app",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . pbCNC --platform=darwin --arch=x64 --version=0.36.0 --asar=true"
   },
   "author": "mick",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.10",
+    "electron-prebuilt": "0.36.0",
     "electron-rebuild": "^1.1.3"
   },
   "dependencies": {
+    "jquery": "^2.2.1",
     "tinyg": "^0.3.27"
   }
 }

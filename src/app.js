@@ -41,11 +41,19 @@ function(
 		return this.views[view_id];
 	}
 
-	var app = {};
+	var app = {
+		'gcodeFile': null,
+		'gcode': null,
+		'programName': null
+	};
 	app.commandHistory = [];
 	app.programLength = 0;
 
 	window.g = new TinyG();
+
+	g.on('error', function(e) {
+		console.error(e);
+	});
 
 	g.on('sentRaw', function(data, channel) {
 		console.info(data);
@@ -53,33 +61,8 @@ function(
   });
 
 	g.on('open', function() {
-		console.info("OPEN")
-		setTimeout(function() {
-			g.write('{jv:4}');
-		}, 200);
-		setTimeout(function() {
-			g.write('{sr:{line:t,posx:t,posy:t,posz:t,unit:t,coor:t,dist:t,xfr:t,yfr:t,zfr:t,stat:t}}');
-		}, 200);
-		setTimeout(function() {
-			g.write('{qv:2}');
-		}, 200);
-		setTimeout(function() {
-			g.write('{x:n}');
-		}, 200);
-		setTimeout(function() {
-			g.write('{y:n}');
-		}, 200)
-		setTimeout(function() {
-			g.write('{z:n}');
-		}, 200)
-
-
-			/*
-				'{y:n}',
-				'{z:n}',)
-
-		})
-			*/
+		g.writeWithPromise('%\n{sr:{line:t,posx:t,posy:t,posz:t,unit:t,coor:t,dist:t,xfr:t,yfr:t,zfr:t,stat:t}}')
+			.then(g.writeWithPromise('{x:n}\n{y:n}\n{z:n}'));
 		app.channel.trigger('connection.success');
 	});
 
