@@ -52,6 +52,8 @@ function(
 	window.g = new TinyG();
 
 	g.on('error', function(e) {
+		if (e.name=="TinyGOpenFirstError")
+			app.channel.trigger('connection.error');
 		console.error(e);
 	});
 

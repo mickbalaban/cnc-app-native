@@ -5,10 +5,11 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . pbCNC --platform=darwin --arch=x64 --version=0.36.0 --asar=true"
+    "build": "electron-packager . pbCNC --platform=darwin --arch=x64 --version=0.36.0 --asar=false --prune=true"
   },
   "author": "mick",
   "devDependencies": {
+    "electron-packager": "^5.2.1",
     "electron-prebuilt": "0.36.0",
     "electron-rebuild": "^1.1.3"
   },
